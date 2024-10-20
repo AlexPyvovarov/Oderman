@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros%}
+
+
+    {% block content%}
+    <ul>
+        {% for pizza in pizzas %}
+        <li>
+            <a href="{{ url_for('pizza_view', pizza_id=pizza.id ) }}">{{pizza.name}}</a>
+        </li>
+        {% endfor %}
+        <footer>
+            {{ macros.light_or_dark_mode("body") }}
+        </footer>   
+    </ul>
+    {% endblock %}
+    
