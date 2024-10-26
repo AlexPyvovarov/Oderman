@@ -1,15 +1,13 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from sqlmodel import select
-from database import session, Pizza, Votes
+from database import session, Pizza, Question, Option, Vote
 
 
 app = Flask(__name__)
 app.secret_key = "iuwefuoebnfbbh90DSfh;"
 title = "Oderman"
-poll_data = {
-'question': 'Which web framework do you use?',
-'answers': ['Flask', 'Django']
-}
+
+
 
 @app.get("/")
 def index():
@@ -31,21 +29,29 @@ def pizza_view():
 
 @app.get("/poll")
 def poll():
-    return render_template("poll.html", poll_data = poll_data)
+    questions = session.scalars(select(Question)).all()
+    return render_template("poll.html", questions=questions)
 
 
-@app.get("/votes_result")
+@app.post("/votes_result")
 def votes_result():
-    votes = session.scalars(select(Votes)).all()
-    return render_template("poll_results.html", votes = votes)
+    question_id = request.form.get("question_id")
+    option_id = request.form.get("option_id")
+    question = session.get(Question, question_id)
+    option = session.get(Option, option_id)
+    if question and option:
+        session.add(Vote(question=question, option=option))
+        return redirect(url_for(index.__name__))
+    return redirect(url_for(poll.__name__))
 
 
 def add_data(name, price, summary):
     pizza = Pizza(name=name, price=price, summary=summary)
-    votes = Votes(vote="Flask")
     session.add(pizza)
-    session.add(votes)
     session.commit()
+
+
+
 
 if __name__ == "__main__":
     add_data(name="margarita", price=99, summary="peperoni, cheese, tomato")

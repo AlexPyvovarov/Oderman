@@ -2,16 +2,22 @@
 
 {% block content%}
 
-    <head>
-        <title>{{ poll_data.question }}</title>
-    </head>
-    <body>
-        <h1>{{ poll_data.question }}</h1>
-            <form action="/poll">
-    {% for answer in poll_data.answers %}
-        <input type="radio" name="field" value="{{ answer }}"> {{ answer }}<br>
-    {% endfor %}
-        <input type="submit" value="Vote" />
-            </form>
-    </body>
+{% for question in questions %}
+<div class="input-group mb-3">
+    <label class="input-group-text" for="{{question.id}}">{{question.name}}</label>
+    <select class="form-select vote" id="{{question.id}}" name="{{question.id}}">
+        <option selected disabled>Choose...</option>
+        {% for item in question.options %}
+        <option value="{{item.id}}">{{item.name}}</option>
+            
+        {% endfor %}
+    </select>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/vote.js' ) }} "></script>
+
 {% endblock %}
