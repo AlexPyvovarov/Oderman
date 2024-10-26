@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+    <head>
+        <title>{{ poll_data.question }}</title>
+    </head>
+    <body>
+        <h1>{{ poll_data.question }}</h1>
+            <form action="/poll">
+    {% for answer in poll_data.answers %}
+        <input type="radio" name="field" value="{{ answer }}"> {{ answer }}<br>
+    {% endfor %}
+        <input type="submit" value="Vote" />
+            </form>
+    </body>
+{% endblock %}

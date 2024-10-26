@@ -6,6 +6,10 @@ from database import session, Pizza
 app = Flask(__name__)
 app.secret_key = "iuwefuoebnfbbh90DSfh;"
 title = "Oderman"
+poll_data = {
+'question': 'Which web framework do you use?',
+'answers': ['Flask', 'Django']
+}
 
 @app.get("/")
 def index():
@@ -25,11 +29,18 @@ def pizza_view():
     pizza = pizza.model_dump()
     return render_template("view.html", pizza = pizza)
 
+@app.get("/poll")
+def poll():
+    return render_template("poll.html", poll_data = poll_data)
 
-# def mock_data():
-#     pizzas = [Pizza(name=f"{x}", price=x, summary=f"{x}") for x in range(1, 11)]
-#     session.add_all(pizzas)
-#     session.commit()
+
+@app.get("/poll_results")
+def poll_results():
+    vote = request.args.get('answers')
+    with open("data.txt", 'a') as f:
+        f.write(vote)
+        f.close()
+    return render_template('poll_results.html', poll_data = poll_data, votes=vote)
 
 
 def add_data(name, price, summary):
@@ -38,6 +49,5 @@ def add_data(name, price, summary):
     session.commit()
 
 if __name__ == "__main__":
-    # mock_data()
     add_data(name="margarita", price=99, summary="peperoni, cheese, tomato")
     app.run(debug=True)
