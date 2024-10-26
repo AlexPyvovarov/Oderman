@@ -1,2 +1,2 @@
 from .config import restart_db, session
-from .database import Pizza, SQLModel
+from .database import Pizza, SQLModel, Votes

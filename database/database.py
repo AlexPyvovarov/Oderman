@@ -11,6 +11,12 @@ class Pizza(SQLModel, table=True):
 
 
 
+class Votes(SQLModel, table = True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    vote: str
+
+
+
 
 #EOF
 

@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 
 {% block content%}
-
-<h1>Thank you for submitting your vote for</h1>
-        {{ data.question }}
-        {{ votes }}
-
+        <ul>
+                {% for vote in votes %}
+                <li>
+                    <a href="{{ url_for('votes_results', vote_id=vote.id ) }}">{{vote.vote}}</a>
+                </li>
+                {% endfor %}
+            </ul>
 {% endblock %}

@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from sqlmodel import select
-from database import session, Pizza
+from database import session, Pizza, Votes
 
 
 app = Flask(__name__)
@@ -34,18 +34,17 @@ def poll():
     return render_template("poll.html", poll_data = poll_data)
 
 
-@app.get("/poll_results")
-def poll_results():
-    vote = request.args.get('answers')
-    with open("data.txt", 'a') as f:
-        f.write(vote)
-        f.close()
-    return render_template('poll_results.html', poll_data = poll_data, votes=vote)
+@app.get("/votes_result")
+def votes_result():
+    votes = session.scalars(select(Votes)).all()
+    return render_template("poll_results.html", votes = votes)
 
 
 def add_data(name, price, summary):
     pizza = Pizza(name=name, price=price, summary=summary)
+    votes = Votes(vote="Flask")
     session.add(pizza)
+    session.add(votes)
     session.commit()
 
 if __name__ == "__main__":
