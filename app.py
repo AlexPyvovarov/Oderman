@@ -8,6 +8,38 @@ app.secret_key = "iuwefuoebnfbbh90DSfh;"
 title = "Oderman"
 
 
+def mock():
+        lang = Question(
+            name="Ваша улюблена мова програмування",
+            options=[
+                Option(name="Python"),
+                Option(name="Java"),
+                Option(name="JavaScript"),
+                Option(name="C#"),
+                Option(name="C++"),
+            ],
+        )
+        gender = Question(
+            name="Оберіть зайве",
+            options=[
+                Option(name="Male"),
+                Option(name="Female"),
+                Option(name="Neither"),
+                Option(name="Helicopter"),
+                Option(name="Quadrobber"),
+            ],
+        )
+        session.add(gender)
+        session.add(lang)
+        session.commit()
+
+
+def add_data(name, price, summary):
+    pizza = Pizza(name=name, price=price, summary=summary)
+    session.add(pizza)
+    session.commit()
+
+
 
 @app.get("/")
 def index():
@@ -33,8 +65,8 @@ def poll():
     return render_template("poll.html", questions=questions)
 
 
-@app.post("/votes_result")
-def votes_result():
+@app.post("/poll/result")
+def vote_result():
     question_id = request.form.get("question_id")
     option_id = request.form.get("option_id")
     question = session.get(Question, question_id)
@@ -45,14 +77,10 @@ def votes_result():
     return redirect(url_for(poll.__name__))
 
 
-def add_data(name, price, summary):
-    pizza = Pizza(name=name, price=price, summary=summary)
-    session.add(pizza)
-    session.commit()
-
 
 
 
 if __name__ == "__main__":
     add_data(name="margarita", price=99, summary="peperoni, cheese, tomato")
+    mock()
     app.run(debug=True)

@@ -8,7 +8,7 @@ votes.forEach(vote => {
         const data = new URLSearchParams();
         data.append('question_id', e.target.getAttribute('id'));
         data.append('option_id', selected_item.value);
-        fetch("/vote/result/",{
+        fetch("/poll/result",{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'

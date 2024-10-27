@@ -13,7 +13,7 @@ class Pizza(SQLModel, table=True):
 class Option(SQLModel, table = True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str = Field(unique=True)
-    question_id: int = Field(foreign_key="question_id")
+    question_id: int = Field(foreign_key="question.id")
 
 
 class Question(SQLModel, table = True):
